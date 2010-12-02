@@ -5,9 +5,18 @@ class BlacklightSitemapGenerator < Rails::Generator::Base
 
   def manifest
     record do |m|
-      sitemap_task = "require 'blacklight-sitemap'\nRake::BlacklightSitemapTask.new"
+      sitemap_task = <<EOF 
+require 'blacklight-sitemap'
+Rake::BlacklightSitemapTask.new do |sm|
+  # sm.url = 'http://localhost:3000'
+  # sm.gzip = false
+  # sm.changefreq = '' #valid values are: 
+  # sm.ceiling = 50000
+  # sm.lastmod_field = 'timestamp'
+end
+EOF
       rakefile = File.read('Rakefile')
-      if rakefile.scan(sitemap_task).empty?
+      if rakefile.scan('Rake::BlacklightSitemapTask.new').empty?
         rakefile << "\n" << sitemap_task
         File.open('Rakefile', 'w'){|f| f.puts rakefile}
       end      
