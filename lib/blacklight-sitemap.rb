@@ -51,6 +51,7 @@ module Rake
 
           desc 'create a sitemap for blacklight'
           task :create => :environment do
+            start_time = Time.now
             puts 'Creating a sitemap...'
             fl = ['id', @lastmod_field, @priority_field].compact.join(',')
             base_solr_parameters = {:qt => 'standard', :q => 'id:[* TO *]', :fl => fl}
@@ -104,6 +105,10 @@ module Rake
               fh.puts sitemap_index_builder.to_xml
             end
             puts 'Done.'
+            end_time = Time.now
+            puts 'Create start time: ' + start_time.to_s
+            puts 'Create end time:   ' + end_time.to_s
+            puts 'Execution time in seconds: ' + (end_time - start_time).to_s
           end # task :sitemap
 
           desc 'clobber sitemap files'
