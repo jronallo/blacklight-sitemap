@@ -29,6 +29,7 @@ Remove create sitemap files:
 
 * Determine the lastmodified date for a particular sub-sitemap. For large indexes, allowing search engines to only download the sitemaps which have changed will be important. Can we always sort by timestamp?
 * How to more fully test the gem independent from a Rails application with Blacklight installed?
+* Instead of having to hardcode the base url find an easy way to include Blacklight route url helpers in the rake task.
 
 == Author
 
