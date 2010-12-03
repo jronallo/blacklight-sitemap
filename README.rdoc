@@ -32,6 +32,7 @@ Remove create sitemap files:
 * Instead of having to hardcode the base url find an easy way to include Blacklight route url helpers in the rake task.
 * Incremental sitemaps?
 * Check file size to insure a sitemap doesn't go above the 10MB limit.
+* Insure the sitemap index file does not exceed 50,000 sitemaps and 10MB.
 
 == Author
 
