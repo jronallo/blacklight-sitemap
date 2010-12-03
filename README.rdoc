@@ -1,19 +1,41 @@
 = blacklight-sitemap
 
-Description goes here.
+Rake task for creating a sitemap from a Blacklight Solr index.
 
-== Contributing to blacklight-sitemap
- 
-* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
-* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
-* Fork the project
-* Start a feature/bugfix branch
-* Commit and push until you are happy with your contribution
-* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
-* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+== Installation
+
+In config/environment.rb add:
+    config.gem 'blacklight-sitemap'
+
+Install the gem:
+    rake gems:install
+or
+    gem install blacklight-sitemap
+
+Run the generator:
+    script/generate blacklight_sitemap
+
+Open your Rakefile and edit the BlacklightSitemapTask to your liking using the
+provided documentation.
+
+Run the rake task:
+    rake blacklight:sitemap
+
+Remove create sitemap files:
+    rake blacklight:sitemap:clobber
+
+
+== TODO
+
+* Determine the lastmodified date for a particular sub-sitemap. For large indexes, allowing search engines to only download the sitemaps which have changed will be important. Can we always sort by timestamp?
+* How to more fully test the gem independent from a Rails application with Blacklight installed?
+
+== Author
+
+Jason Ronallo
 
 == Copyright
 
-Copyright (c) 2010 Jason Ronallo. See LICENSE.txt for
+Copyright (c) 2010 North Carolina State University. See LICENSE.txt for
 further details.
 
