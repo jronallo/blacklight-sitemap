@@ -4,25 +4,31 @@ Rake task for creating a sitemap from a Blacklight Solr index.
 
 == Installation
 
-In config/environment.rb add:
+* In config/environment.rb add:
     config.gem 'blacklight-sitemap'
 
-Install the gem:
+* Install the gem:
     rake gems:install
 or
     gem install blacklight-sitemap
 
-Run the generator:
+* Run the generator:
     script/generate blacklight_sitemap
 
-Open your Rakefile and edit the BlacklightSitemapTask to your liking using the
+* Open your Rakefile and edit the BlacklightSitemapTask to your liking using the
 provided documentation.
 
-Run the rake task:
+* Run the rake task:
     rake blacklight:sitemap
 
-Remove create sitemap files:
+* Remove created sitemap files:
     rake blacklight:sitemap:clobber
+
+== Upgrading
+
+* Either remove your current blacklight-sitemap from your Rakefile or comment it out.
+* Install the latest gem. You may need to update the version in your cofig/environment.rb
+* Run the generator again.
 
 
 == TODO
