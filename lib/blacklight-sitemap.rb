@@ -40,7 +40,7 @@ module Rake
       @max = 50000 #default value for max number of locs per sitemap file
       @lastmod_field = 'timestamp'
       @priority_field = nil
-      @sort = '_docid_ asc'
+      @sort = '_docid_ asc' # http://osdir.com/ml/solr-user.lucene.apache.org/2010-03/msg01371.html
       yield self if block_given?
       define
     end
