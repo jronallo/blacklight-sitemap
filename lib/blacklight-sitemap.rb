@@ -64,6 +64,12 @@ module Rake
             puts 'Total sitemap to create: ' + batches.to_s
             master_sitemap = ''
             base_solr_parameters.merge!(:sort => @sort) if @sort
+
+            # create a hash of batches with lastmod dates so that the most recent
+            # lastmod date shows up associated with that batch. This will feed
+            # into the lastmod for each sitemap in the index sitemap.
+            batch_lastmods = {}
+
             batches.times do |batch_number|
               current_page = batch_number + 1
               start = batch_number * @max
@@ -75,7 +81,12 @@ module Rake
                     xml.url do
                       # FIXME through config
                       xml.loc File.join(@url.to_s, doc['id'])
-                      xml.lastmod doc[@lastmod_field].to_s if @lastmod_field and doc[@lastmod_field]
+                      if @lastmod_field and doc[@lastmod_field]
+                        xml.lastmod doc[@lastmod_field].to_s
+                        if batch_lastmods[batch_number].blank? or batch_lastmods[batch_number] < doc[@lastmod_field]
+                          batch_lastmods[batch_number] = doc[@lastmod_field]
+                        end
+                      end
                       xml.priority doc[@priority_field] if @priority_field and doc[@priority_field]
                       xml.changefreq @changefreq if @changefreq
                     end
@@ -91,7 +102,7 @@ module Rake
               end
             end
             puts 'Creating sitemap index...'
-            lastmod = DateTime.now.utc.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+            rake_run_lastmod = DateTime.now.utc.strftime("%Y-%m-%dT%H:%M:%S+00:00")
             sitemap_index_builder = Nokogiri::XML::Builder.new do |xml|
               xml.sitemapindex 'xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9' do
                 batches.times do |batch|
@@ -99,7 +110,11 @@ module Rake
                   sitemap_filename << '.gz' if @gzip
                   xml.sitemap{
                     xml.loc sitemap_filename
-                    xml.lastmod lastmod
+                    if batch_lastmods[batch]
+                      xml.lastmod batch_lastmods[batch]
+                    else
+                      xml.lastmod rake_run_lastmod
+                    end
                   }
                 end
               end
