@@ -84,6 +84,17 @@ describe "BlacklightSitemap" do
     task.priority_field.should eq('priority')
   end
 
+  it 'should have a default value for sorting the Solr query' do
+    @default_task.sort.should eq('_docid_ asc')
+  end
+
+  it 'should be able to set a new value for sort' do
+    task = Rake::BlacklightSitemapTask.new do |sm|
+      sm.sort = 'timestamp asc'
+    end
+    task.sort.should eq('timestamp asc')
+  end
+
   it 'should create the sitemap clobber task' do
     Rake::BlacklightSitemapTask.new
     Rake::Task['blacklight:sitemap:clobber'].should be_a_kind_of Rake::Task

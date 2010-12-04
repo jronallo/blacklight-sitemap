@@ -33,6 +33,9 @@ Rake::BlacklightSitemapTask.new do |sm|
 
   # Solr field used to retrieve from a document the value for the priority element for a url
   # sm.priority_field = nil
+
+  # Solr query sort parameter
+  # sm.sort = '_docid_ asc'
 end
 EOF
       rakefile = File.read('Rakefile')

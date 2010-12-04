@@ -29,15 +29,18 @@ module Rake
     # Solr field to use to provide a priority for this resource
     attr_accessor :priority_field
 
+    # Solr sort option
+    attr_accessor :sort
 
     def initialize
-      @url = 'http://localhost:3000'
+      @url = 'http://localhost:3000/catalog'
       @base_filename = 'blacklight'
       @gzip = false
       @changefreq = nil
       @max = 50000 #default value for max number of locs per sitemap file
       @lastmod_field = 'timestamp'
       @priority_field = nil
+      @sort = '_docid_ asc'
       yield self if block_given?
       define
     end
@@ -60,7 +63,7 @@ module Rake
             batches = (number_of_resources / @max.to_f).ceil
             puts 'Total sitemap to create: ' + batches.to_s
             master_sitemap = ''
-
+            base_solr_parameters.merge!(:sort => @sort) if @sort
             batches.times do |batch_number|
               current_page = batch_number + 1
               start = batch_number * @max
