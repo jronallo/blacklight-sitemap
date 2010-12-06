@@ -55,6 +55,10 @@ module Rake
           desc 'create a sitemap for blacklight'
           task :create => :environment do
             start_time = Time.now
+
+            #collect warnings here rather than raise an error
+            warnings = []
+
             puts 'Creating a sitemap...'
             fl = ['id', @lastmod_field, @priority_field].compact.join(',')
             base_solr_parameters = {:qt => 'standard', :q => 'id:[* TO *]', :fl => fl}
@@ -97,6 +101,9 @@ module Rake
               File.open(sitemap_filename, 'w') do |fh|
                 fh.puts sitemap_builder.to_xml
               end
+              if File.size(sitemap_filename) > 10485760
+                warnings << 'WARNING Sitemap is over 10MB limit: ' + sitemap_filename
+              end
               if @gzip
                 `gzip #{sitemap_filename}`
               end
@@ -119,14 +126,19 @@ module Rake
                 end
               end
             end #sitemap_index_builder
-            File.open(File.join(RAILS_ROOT, 'public', @base_filename + '-sitemap.xml'), 'w') do |fh|
+            index_sitemap_filename = File.join(RAILS_ROOT, 'public', @base_filename + '-sitemap.xml')
+            File.open(index_sitemap_filename, 'w') do |fh|
               fh.puts sitemap_index_builder.to_xml
+            end
+            if File.size(index_sitemap_filename) > 10485760
+              warnings << 'WARNING Index sitemap is over 10MB limit: ' + index_sitemap_filename
             end
             puts 'Done.'
             end_time = Time.now
             puts 'Create start time: ' + start_time.to_s
             puts 'Create end time:   ' + end_time.to_s
             puts 'Execution time in seconds: ' + (end_time - start_time).to_s
+            puts warnings.join("\n")
           end # task :sitemap
 
           desc 'clobber sitemap files'
