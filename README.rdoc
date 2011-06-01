@@ -4,16 +4,17 @@ Rake task for creating a sitemap from a Blacklight Solr index.
 
 == Installation
 
-* In config/environment.rb add:
-    config.gem 'blacklight-sitemap'
+* This version only works with Rails 3/Blacklight 3. For Blacklight versions 2.x, try v0.0.5
+  of this gem.
+
+* In Gemfile
+    gem 'blacklight-sitemap'
 
 * Install the gem:
-    rake gems:install
-or
-    gem install blacklight-sitemap
+    bundle install
 
 * Run the generator:
-    script/generate blacklight_sitemap
+    rails g blacklight:sitemap
 
 * Open your Rakefile and edit the BlacklightSitemapTask to your liking using the
 provided documentation.
