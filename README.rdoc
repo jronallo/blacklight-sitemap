@@ -8,7 +8,7 @@ Rake task for creating a sitemap from a Blacklight Solr index.
   of this gem.
 
 * In Gemfile
-    gem 'blacklight-sitemap'
+    gem 'blacklight-sitemap', '~> 1.0.0'
 
 * Install the gem:
     bundle install
