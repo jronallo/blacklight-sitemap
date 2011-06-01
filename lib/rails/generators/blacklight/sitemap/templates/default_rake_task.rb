@@ -1,11 +1,3 @@
-class BlacklightSitemapGenerator < Rails::Generator::Base
-  def initialize(*runtime_args)
-    super
-  end
-
-  def manifest
-    record do |m|
-      sitemap_task = <<EOF
 require 'blacklight-sitemap'
 Rake::BlacklightSitemapTask.new do |sm|
   # below are configuration options with their default values shown.
@@ -36,21 +28,8 @@ Rake::BlacklightSitemapTask.new do |sm|
 
   # Solr query sort parameter
   # sm.sort = '_docid_ asc'
+  
+  # Solr request handler. This can be useful when your Solr configuration already has
+  # a filter query appended.
+  # sm.qt = 'standard'
 end
-EOF
-      rakefile = File.read('Rakefile')
-      if rakefile.scan('Rake::BlacklightSitemapTask.new').empty?
-        rakefile << "\n" << sitemap_task
-        File.open('Rakefile', 'w'){|f| f.puts rakefile}
-      end
-    end
-  end
-
-  protected
-
-  def banner
-    %{Usage: #{$0} #{spec.name}\nCopies OpenURL.js public/javascripts/}
-  end
-
-end
-

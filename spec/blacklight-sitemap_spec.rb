@@ -94,6 +94,13 @@ describe "BlacklightSitemap" do
     end
     task.sort.should eq('timestamp asc')
   end
+  
+  it 'should be able to set a new value for qt' do
+    task = Rake::BlacklightSitemapTask.new do |sm|
+      sm.qt = 'bozart'
+    end
+    task.qt.should eq('bozart')
+  end
 
   it 'should create the sitemap clobber task' do
     Rake::BlacklightSitemapTask.new

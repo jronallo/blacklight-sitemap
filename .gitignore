@@ -45,3 +45,4 @@ Gemfile.lock
 #*.swp
 
 .redcar
+.rvmrc

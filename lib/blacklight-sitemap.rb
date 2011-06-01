@@ -31,6 +31,9 @@ module Rake
 
     # Solr sort option
     attr_accessor :sort
+    
+    # pick a request handler. 
+    attr_accessor :qt
 
     def initialize
       @url = 'http://localhost:3000/catalog'
@@ -41,6 +44,7 @@ module Rake
       @lastmod_field = 'timestamp'
       @priority_field = nil
       @sort = '_docid_ asc' # http://osdir.com/ml/solr-user.lucene.apache.org/2010-03/msg01371.html
+      @qt = 'standard'
       yield self if block_given?
       define
     end
@@ -61,7 +65,7 @@ module Rake
 
             puts 'Creating a sitemap...'
             fl = ['id', @lastmod_field, @priority_field].compact.join(',')
-            base_solr_parameters = {:qt => 'standard', :q => 'id:[* TO *]', :fl => fl}
+            base_solr_parameters = {:qt => @qt, :fq => 'id:[* TO *]', :fl => fl}
             number_of_resources = Blacklight.solr.find(base_solr_parameters.merge(:rows => 1))['response']['numFound']
             puts 'Number of resources: ' + number_of_resources.to_s
             batches = (number_of_resources / @max.to_f).ceil
