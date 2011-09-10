@@ -3,6 +3,12 @@ require 'nokogiri'
 require 'rake'
 require 'fileutils'
 
+# allow this to work for rake 0.8.7 and 0.9.x without deprecation warnings
+begin
+  include Rake::DSL
+rescue
+end
+
 module Rake
   class BlacklightSitemapTask
     # base url used for all locations
@@ -101,7 +107,7 @@ module Rake
                   end
                 end
               end
-              sitemap_filename = File.join(RAILS_ROOT, 'public', @base_filename + '-sitemap' + batch_number.to_s + '.xml')
+              sitemap_filename = File.join(Rails.root, 'public', @base_filename + '-sitemap' + batch_number.to_s + '.xml')
               File.open(sitemap_filename, 'w') do |fh|
                 fh.puts sitemap_builder.to_xml
               end
@@ -130,7 +136,7 @@ module Rake
                 end
               end
             end #sitemap_index_builder
-            index_sitemap_filename = File.join(RAILS_ROOT, 'public', @base_filename + '-sitemap.xml')
+            index_sitemap_filename = File.join(Rails.root, 'public', @base_filename + '-sitemap.xml')
             File.open(index_sitemap_filename, 'w') do |fh|
               fh.puts sitemap_index_builder.to_xml
             end
@@ -148,7 +154,7 @@ module Rake
           desc 'clobber sitemap files'
           task :clobber do
             puts "Deleting all sitemap files..."
-            Dir.glob(File.join(RAILS_ROOT, 'public', @base_filename + '-sitemap*')).each do |sitemap|
+            Dir.glob(File.join(Rails.root, 'public', @base_filename + '-sitemap*')).each do |sitemap|
               FileUtils.rm(sitemap)
             end
           end
