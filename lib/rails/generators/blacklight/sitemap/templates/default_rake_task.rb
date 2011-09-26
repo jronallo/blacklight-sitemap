@@ -2,8 +2,13 @@ require 'blacklight-sitemap'
 Rake::BlacklightSitemapTask.new do |sm|
   # below are configuration options with their default values shown.
 
-  # FIXME: you'll definitely want to change the url value
-  # sm.url = 'http://localhost:3000'
+  # FIXME: you'll definitely want to change the resource_url value
+  # base url for resources
+  # sm.resource_url = 'http://localhost:3000/catalog'
+  
+  # FIXME: you'll definitely want to change the public_url value
+  # base url for public directory of application where sitemaps will be placed
+  # sm.public_url = 'http://localhost:3000'
 
   # base filename given to generated sitemap files
   # sm.base_filename = 'blacklight'

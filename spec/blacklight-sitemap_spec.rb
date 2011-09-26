@@ -15,11 +15,18 @@ describe "BlacklightSitemap" do
     Rake::Task['blacklight:sitemap:create'].should be_a_kind_of Rake::Task
   end
 
-  it "should be able to have the url attribute" do
+  it "should be able to have the resource url attribute" do
     task = Rake::BlacklightSitemapTask.new do |sm|
-      sm.url = 'http://example.com'
+      sm.resource_url = 'http://example.com/catalog'
     end
-    task.url.should eq('http://example.com')
+    task.resource_url.should eq('http://example.com/catalog')
+  end
+  
+  it "should have the public URL for storing the sitemaps" do
+    task = Rake::BlacklightSitemapTask.new do |sm|
+      sm.public_url = 'http://example.com'
+    end
+    task.public_url.should eq('http://example.com')
   end
 
   it 'should have a base_filename attribute' do

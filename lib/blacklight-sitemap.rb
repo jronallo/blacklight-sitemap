@@ -11,8 +11,11 @@ end
 
 module Rake
   class BlacklightSitemapTask
-    # base url used for all locations
-    attr_accessor :url
+    # base url used for locations of resources
+    attr_accessor :resource_url
+    
+    # base url used for public directory where sitemaps will be placed
+    attr_accessor :public_url
 
     # base filename to use for sitemap in case these will be moved to a location
     # that hosts other sitemaps so these sitemaps do not overwrite others
@@ -42,7 +45,9 @@ module Rake
     attr_accessor :qt
 
     def initialize
-      @url = 'http://localhost:3000/catalog'
+      @resource_url = 'http://localhost:3000/catalog'
+      @public_url = 'http://localhost:3000'
+      
       @base_filename = 'blacklight'
       @gzip = false
       @changefreq = nil
@@ -94,7 +99,7 @@ module Rake
                   response['docs'].each do |doc|
                     xml.url do
                       # FIXME through config
-                      xml.loc File.join(@url.to_s, doc['id'])
+                      xml.loc File.join(@resource_url.to_s, doc['id'])
                       if @lastmod_field and doc[@lastmod_field]
                         xml.lastmod doc[@lastmod_field].to_s
                         if batch_lastmods[batch_number].blank? or batch_lastmods[batch_number] < doc[@lastmod_field]
@@ -123,7 +128,7 @@ module Rake
             sitemap_index_builder = Nokogiri::XML::Builder.new do |xml|
               xml.sitemapindex 'xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9' do
                 batches.times do |batch|
-                  sitemap_filename = File.join(@url.to_s, @base_filename + '-sitemap' + batch.to_s + '.xml')
+                  sitemap_filename = File.join(@public_url.to_s, @base_filename + '-sitemap' + batch.to_s + '.xml')
                   sitemap_filename << '.gz' if @gzip
                   xml.sitemap{
                     xml.loc sitemap_filename
