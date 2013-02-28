@@ -4,11 +4,10 @@ Rake task for creating a sitemap from a Blacklight Solr index.
 
 == Installation
 
-* This version only works with Rails 3/Blacklight 3. For Blacklight versions 2.x, try v0.0.5
-  of this gem.
+* This version only works with Rails 3.2/Blacklight 4. Some changes to how Blacklight is configured and how it communicates with Solr mean that it will currently only work with Blacklight 4 using the standard CatalogController.
 
 * In Gemfile
-    gem 'blacklight-sitemap', '~> 1.0.0'
+    gem 'blacklight-sitemap', '~> 2.0.0'
 
 * Install the gem:
     bundle install

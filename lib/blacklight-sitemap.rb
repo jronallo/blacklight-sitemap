@@ -74,10 +74,13 @@ module Rake
             #collect warnings here rather than raise an error
             warnings = []
 
+            blacklight_config = CatalogController.blacklight_config
+
             puts 'Creating a sitemap...'
             fl = ['id', @lastmod_field, @priority_field].compact.join(',')
             base_solr_parameters = {:qt => @qt, :fq => 'id:[* TO *]', :fl => fl}
-            number_of_resources = Blacklight.solr.find(base_solr_parameters.merge(:rows => 1))['response']['numFound']
+            response = Blacklight.solr.get(blacklight_config.solr_path, :params => base_solr_parameters.merge(:rows => 1))
+            number_of_resources = response['response']['numFound']
             puts 'Number of resources: ' + number_of_resources.to_s
             batches = (number_of_resources / @max.to_f).ceil
             puts 'Total sitemap to create: ' + batches.to_s
@@ -93,7 +96,7 @@ module Rake
               current_page = batch_number + 1
               start = batch_number * @max
               puts 'Processing batch # ' + current_page.to_s
-              response = Blacklight.solr.find(base_solr_parameters.merge(:rows => @max, :start => start))['response']
+              response = Blacklight.solr.get(blacklight_config.solr_path, :params => base_solr_parameters.merge(:rows => @max, :start => start))['response']
               sitemap_builder = Nokogiri::XML::Builder.new do |xml|
                 xml.urlset "xmlns" => "http://www.sitemaps.org/schemas/sitemap/0.9" do
                   response['docs'].each do |doc|
