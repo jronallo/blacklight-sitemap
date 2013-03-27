@@ -127,7 +127,7 @@ module Rake
               end
             end
             puts 'Creating sitemap index...'
-            rake_run_lastmod = DateTime.now.utc.strftime("%Y-%m-%dT%H:%M:%S+00:00")
+            rake_run_lastmod = DateTime.now.utc.strftime("%Y-%m-%dT%H:%M:%SZ")
             sitemap_index_builder = Nokogiri::XML::Builder.new do |xml|
               xml.sitemapindex 'xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9' do
                 batches.times do |batch|
