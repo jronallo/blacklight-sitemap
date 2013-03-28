@@ -11,7 +11,6 @@ GEM
     json (1.7.7)
     nokogiri (1.4.4)
     rake (10.0.3)
-    rcov (0.9.9)
     rdoc (4.0.0)
       json (~> 1.4)
     rspec (2.13.0)
@@ -29,5 +28,4 @@ PLATFORMS
 DEPENDENCIES
   jeweler (~> 1.8.4)
   nokogiri
-  rcov
   rspec (~> 2.13.0)
