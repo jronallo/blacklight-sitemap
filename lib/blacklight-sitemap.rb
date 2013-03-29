@@ -74,12 +74,10 @@ module Rake
             #collect warnings here rather than raise an error
             warnings = []
 
-            blacklight_config = CatalogController.blacklight_config
-
             puts 'Creating a sitemap...'
             fl = ['id', @lastmod_field, @priority_field].compact.join(',')
-            base_solr_parameters = {:qt => @qt, :fq => 'id:[* TO *]', :fl => fl}
-            response = Blacklight.solr.get(blacklight_config.solr_path, :params => base_solr_parameters.merge(:rows => 1))
+            base_solr_parameters = {:qt => @qt, :q => 'id:[* TO *]', :fl => fl}
+            response = Blacklight.solr.get(get_solr_path, :params => base_solr_parameters.merge(:rows => 1))
             number_of_resources = response['response']['numFound']
             puts 'Number of resources: ' + number_of_resources.to_s
             batches = (number_of_resources / @max.to_f).ceil
@@ -96,7 +94,7 @@ module Rake
               current_page = batch_number + 1
               start = batch_number * @max
               puts 'Processing batch # ' + current_page.to_s
-              response = Blacklight.solr.get(blacklight_config.solr_path, :params => base_solr_parameters.merge(:rows => @max, :start => start))['response']
+              response = Blacklight.solr.get(get_solr_path, :params => base_solr_parameters.merge(:rows => @max, :start => start))['response']
               sitemap_builder = Nokogiri::XML::Builder.new do |xml|
                 xml.urlset "xmlns" => "http://www.sitemaps.org/schemas/sitemap/0.9" do
                   response['docs'].each do |doc|
@@ -170,6 +168,17 @@ module Rake
         end # namespace :sitemap
       end # namespace :blacklight
     end # define
+
+    # Versions of Blacklight prior to 4.x don't have the solr_path setting in the configuration.
+    # If this is the case, we'll use the config/solr.yml file to determine the path to solr.
+    def get_solr_path
+      if CatalogController.blacklight_config.solr_path.nil?
+        solr_config = YAML::load(File.open("#{Rails.root}/config/solr.yml"))
+        solr_config[Rails.env]["url"] + "/select"
+      else
+        CatalogController.blacklight_config.solr_path
+      end
+    end # get_solr_path
   end # BlacklightSitemapTask
 end # Rake
 
