@@ -5,10 +5,16 @@ Rake::BlacklightSitemapTask.new do |sm|
   # FIXME: you'll definitely want to change the resource_url value
   # base url for resources
   # sm.resource_url = 'http://localhost:3000/catalog'
-  
+
   # FIXME: you'll definitely want to change the public_url value
   # base url for public directory of application where sitemaps will be placed
   # sm.public_url = 'http://localhost:3000'
+
+  # If you have IIIF manifests you want to expose via a sitemap set this to a
+  # IIIF URL template.
+  # sm.iiif_manifest_template = false # default
+  # sm.iiif_manifest_template = "https://d.lib.ncsu.edu/collections/catalog/%{identifier}/manifest.json"
+  # sm.iiif_presentation_version = '2.1'
 
   # base filename given to generated sitemap files
   # sm.base_filename = 'blacklight'
@@ -33,7 +39,7 @@ Rake::BlacklightSitemapTask.new do |sm|
 
   # Solr query sort parameter
   # sm.sort = '_docid_ asc'
-  
+
   # Solr request handler. This can be useful when your Solr configuration already has
   # a filter query appended.
   # sm.qt = 'standard'

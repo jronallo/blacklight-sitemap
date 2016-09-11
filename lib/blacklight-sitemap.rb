@@ -13,9 +13,13 @@ module Rake
   class BlacklightSitemapTask
     # base url used for locations of resources
     attr_accessor :resource_url
-    
+
     # base url used for public directory where sitemaps will be placed
     attr_accessor :public_url
+
+    # IIIF manifests
+    attr_accessor :iiif_manifest_template
+    attr_accessor :iiif_presentation_version
 
     # base filename to use for sitemap in case these will be moved to a location
     # that hosts other sitemaps so these sitemaps do not overwrite others
@@ -40,14 +44,16 @@ module Rake
 
     # Solr sort option
     attr_accessor :sort
-    
-    # pick a request handler. 
+
+    # pick a request handler.
     attr_accessor :qt
 
     def initialize
       @resource_url = 'http://localhost:3000/catalog'
       @public_url = 'http://localhost:3000'
-      
+      @iiif_manifest_template = false
+      @iiif_presentation_version = '2.1'
+
       @base_filename = 'blacklight'
       @gzip = false
       @changefreq = nil
@@ -98,10 +104,11 @@ module Rake
               puts 'Processing batch # ' + current_page.to_s
               response = Blacklight.solr.get(blacklight_config.solr_path, :params => base_solr_parameters.merge(:rows => @max, :start => start))['response']
               sitemap_builder = Nokogiri::XML::Builder.new do |xml|
-                xml.urlset "xmlns" => "http://www.sitemaps.org/schemas/sitemap/0.9" do
+                namespaces = {"xmlns" => "http://www.sitemaps.org/schemas/sitemap/0.9", "xmlns:iiif" => "http://iiif.io/api/presentation/#{@iiif_presentation_version}/"}
+                xml.urlset namespaces do
                   response['docs'].each do |doc|
                     xml.url do
-                      # FIXME through config
+                      # FIXME id through config
                       xml.loc File.join(@resource_url.to_s, doc['id'])
                       if @lastmod_field and doc[@lastmod_field]
                         xml.lastmod doc[@lastmod_field].to_s
@@ -111,6 +118,12 @@ module Rake
                       end
                       xml.priority doc[@priority_field] if @priority_field and doc[@priority_field]
                       xml.changefreq @changefreq if @changefreq
+                      # IIIF manifest discovery
+                      # xmlns:iiif="http://iiif.io/api/presentation/2/"
+                      if @iiif_manifest_template
+                        manifest_url = @iiif_manifest_template % {identifier: doc['id']}
+                        xml['iiif'].manifest manifest_url
+                      end
                     end
                   end
                 end
@@ -172,4 +185,3 @@ module Rake
     end # define
   end # BlacklightSitemapTask
 end # Rake
-
