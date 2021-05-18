@@ -9,7 +9,11 @@ GEM
       rake
       rdoc
     json (1.7.7)
-    nokogiri (1.4.4)
+    mini_portile2 (2.5.1)
+    nokogiri (1.11.4)
+      mini_portile2 (~> 2.5.0)
+      racc (~> 1.4)
+    racc (1.5.2)
     rake (10.0.3)
     rdoc (4.0.0)
       json (~> 1.4)
